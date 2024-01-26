@@ -1017,6 +1017,16 @@ bool VulkanExampleBase::initVulkan()
 	// Defaults to the first device unless specified by command line
 	uint32_t selectedDevice = 0;
 
+	// My change: Select the discrete GPU if available
+	for (uint32_t i = 0; i < gpuCount; i++) {
+		VkPhysicalDeviceProperties deviceProperties;
+		vkGetPhysicalDeviceProperties(physicalDevices[i], &deviceProperties);
+		if (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) {
+			selectedDevice = i;
+			break;
+		}
+	}
+
 #if !defined(VK_USE_PLATFORM_ANDROID_KHR)
 	// GPU selection via command line argument
 	if (commandLineParser.isSet("gpuselection")) {
